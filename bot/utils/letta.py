@@ -1,4 +1,4 @@
-from letta_client import AsyncLetta, LlmConfig, EmbeddingConfig, MessageCreate
+from letta_client import AsyncLetta, LlmConfig, EmbeddingConfig, MessageCreate, ToolCallMessage
 from decouple import config
 from typing import List
 
@@ -39,9 +39,8 @@ async def main():
     print(agent_id)
     # await letta.delete_agent(agent.id)
     # print(await letta.list_agents(123))
-    output = await letta.send_message(agent.id, [MessageCreate(role="user", content="Hello")])
-    print(output.messages[0].reasoning)
-    print(output.messages[1].content)
+    output = await letta.send_message(agent.id, [MessageCreate(role="user", content="Use core memory append tool to remember that my name is Ben.")])
+    print(output)
     
     # print(await letta.list_messages(agent.id))
     

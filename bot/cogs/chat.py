@@ -1,4 +1,4 @@
-from utils.letta import LettaClient, MessageCreate
+from utils.letta import LettaClient, MessageCreate, ToolCallMessage
 from discord.ext import commands
 from discord import app_commands
 import discord
@@ -67,7 +67,13 @@ class Chat(commands.GroupCog, name="ai"):
         # message_list = await self.letta.list_messages(agent_id)
         # message_list.append(MessageCreate(role="user", content=message.content))
         output = await self.letta.send_message(agent_id, [MessageCreate(role="user", content=message.content)])
-        await message.channel.send("> -# " + "\n> -# ".join(output.messages[0].reasoning.split("\n")) + "\n" + output.messages[1].content)
-        
+        for m in output.messages:
+            if hasattr(m, 'reasoning') and m.reasoning:
+                await message.channel.send("> -# " + "\n> -# ".join(m.reasoning.split("\n")))
+            if hasattr(m, 'content') and m.content:
+                await message.channel.send(m.content)
+            if hasattr(m, 'tool_call') and m.tool_call:
+                await message.channel.send(f"-# Tool call: `{m.tool_call}`")
+                        
 async def setup(bot: commands.Bot):
     await bot.add_cog(Chat(bot))
