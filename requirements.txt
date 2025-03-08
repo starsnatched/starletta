@@ -1,0 +1,5 @@
+letta-client
+python-decouple
+discord
+coloredlogs
+peewee
